@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./src/pages/login";
 import Home from "./src/pages/home";
 import PrivateRoute from "./src/components/privateRoute";
-import React from "react";
 
 const AppRoutes = () => {
   return (

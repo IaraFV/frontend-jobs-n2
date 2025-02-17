@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../service/api";
 
+interface User {
+  name: string;
+}
+
 const Home = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
