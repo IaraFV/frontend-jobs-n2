@@ -13,6 +13,7 @@ interface Job {
   employer_name: string;
   job_location: string;
   job_apply_link: string;
+  job_description: string;
 }
 
 const Home = () => {
@@ -21,6 +22,9 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
+  const [expandedJobs, setExpandedJobs] = useState<{ [key: number]: boolean }>(
+    {}
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -70,6 +74,10 @@ const Home = () => {
     if (event.key === "Enter") {
       fetchJobs();
     }
+  };
+
+  const toggleDescription = (index: number) => {
+    setExpandedJobs((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   return (
@@ -174,30 +182,82 @@ const Home = () => {
           {loading ? (
             <p>Carregando vagas...</p>
           ) : (
-            filteredJobs.map((job, index) => (
-              <div
-                key={index}
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  margin: "5px",
-                  width: "100%",
-                  borderRadius: "5px",
-                  backgroundColor: "#f9f9f9",
-                }}
-              >
-                <h3>{job.job_title}</h3>
-                <p>{job.employer_name}</p>
-                <p>{job.job_location}</p>
-                <a
-                  href={job.job_apply_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            filteredJobs.map((job, index) => {
+              const isExpanded = expandedJobs[index] || false;
+              const shortDescription = job.job_description
+                ? job.job_description.slice(0, 150) + "..."
+                : "Descrição não disponível";
+
+              return (
+                <div
+                  key={index}
+                  style={{
+                    border: "1px solid #ccc",
+                    padding: "10px",
+                    margin: "5px",
+                    width: "100%",
+                    borderRadius: "5px",
+                    backgroundColor: "#f9f9f9",
+                  }}
                 >
-                  Ver vaga
-                </a>
-              </div>
-            ))
+                  <h3>{job.job_title}</h3>
+                  <p>
+                    <strong>Empresa:</strong> {job.employer_name}
+                  </p>
+                  <p>
+                    <strong>Localização:</strong> {job.job_location}
+                  </p>
+                  <p>
+                    <strong>Descrição:</strong>{" "}
+                    {isExpanded
+                      ? job.job_description || "Descrição não disponível"
+                      : shortDescription}
+                  </p>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "50%",
+                    }}
+                  >
+                    {job.job_description &&
+                      job.job_description.length > 150 && (
+                        <div style={{ width: "20%" }}>
+                          <button
+                            onClick={() => toggleDescription(index)}
+                            style={{
+                              backgroundColor: "transparent",
+                              border: "none",
+                              color: "#0A65CC",
+                              cursor: "pointer",
+                              marginTop: "5px",
+                            }}
+                          >
+                            {isExpanded ? "Ver menos" : "Ver mais"}
+                          </button>
+                        </div>
+                      )}
+                    <br />
+                    <a
+                      href={job.job_apply_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        width: "20%",
+                        display: "flex",
+                        color: "#0A65CC",
+                        justifyContent: "center",
+                        marginTop: "3px",
+                        justifyItems: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      Ver vaga
+                    </a>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>

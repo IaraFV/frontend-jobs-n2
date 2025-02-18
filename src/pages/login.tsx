@@ -3,16 +3,19 @@ import { useNavigate } from "react-router-dom";
 import api from "../service/api";
 import backgroundImage from "../assets/Loginpageimage.png";
 import logo from "../assets/CONECTATALENT.png";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const response = await api.post("/auth/login", { email, password });
@@ -24,6 +27,8 @@ const Login = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Credenciais inválidas");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,6 +127,7 @@ const Login = () => {
             />
             <button
               type="submit"
+              disabled={isLoading}
               style={{
                 marginTop: "30px",
                 height: "40px",
@@ -130,7 +136,11 @@ const Login = () => {
                 border: "none",
               }}
             >
-              Entrar
+              {isLoading ? (
+                <Loader2 className="animate-spin w-5 h-5" />
+              ) : (
+                "Entrar"
+              )}
             </button>
           </form>
           {error && <p style={{ color: "red" }}>{error}</p>}
