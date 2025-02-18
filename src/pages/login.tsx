@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       const response = await api.post("/auth/login", { email, password });
-
+      setPassword("");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
@@ -34,7 +34,7 @@ const Login = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         height: "100vh",
-        width: "106rem",
+        width: "80rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -134,6 +134,26 @@ const Login = () => {
             </button>
           </form>
           {error && <p style={{ color: "red" }}>{error}</p>}
+          <p
+            style={{
+              marginTop: "20px",
+              color: "#000",
+              fontSize: "16px",
+              fontFamily: "sans-serif",
+            }}
+          >
+            Não tem login?{" "}
+            <span
+              style={{
+                color: "blue",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/register")}
+            >
+              Cadastre-se
+            </span>
+          </p>
         </div>
       </div>
     </div>

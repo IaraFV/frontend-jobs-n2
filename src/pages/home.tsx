@@ -73,7 +73,7 @@ const Home = () => {
   };
 
   return (
-    <div style={{ width: "100rem", height: "100vh" }}>
+    <div style={{ width: "80rem", height: "100vh" }}>
       <div
         style={{
           height: "10vh",
